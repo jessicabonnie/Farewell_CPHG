@@ -26,21 +26,22 @@
 <style type="text/css">
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; }
+code > span.dt { color: #204a87; }
+code > span.dv { color: #0000cf; }
+code > span.bn { color: #0000cf; }
+code > span.fl { color: #0000cf; }
+code > span.ch { color: #4e9a06; }
+code > span.st { color: #4e9a06; }
+code > span.co { color: #8f5902; font-style: italic; }
+code > span.ot { color: #8f5902; }
+code > span.al { color: #ef2929; }
+code > span.fu { color: #000000; }
+code > span.er { font-weight: bold; }
 </style>
 <style type="text/css">
   pre:not([class]) {
@@ -85,16 +86,16 @@ img {
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="ot">imchipfolder=</span>/h2/t74/cphgdesk/share/cphg_OnengutLab/Jessica/Farewell/IMCHIP</code></pre>
 <p>Cleaning Immunochip data requires the following scripts:</p>
 <ul>
-<li>check_export.sh</li>
-<li>makedata.sh</li>
-<li>pheno_inc.sh</li>
-<li>qc1.sh</li>
-<li>relatedness_qc.sh</li>
-<li>structure.sh</li>
-<li>gender.R</li>
-<li>rawrel_relat.R</li>
-<li>rawrel_imchip.R</li>
-<li>projpca_plus.R</li>
+<li><code>check_export.sh</code></li>
+<li><code>makedata.sh</code></li>
+<li><code>pheno_inc.sh</code></li>
+<li><code>qc1.sh</code></li>
+<li><code>relatedness_qc.sh</code></li>
+<li><code>structure.sh</code></li>
+<li><code>gender.R</code></li>
+<li><code>rawrel_relat.R</code></li>
+<li><code>rawrel_imchip.R</code></li>
+<li><code>projpca_plus.R</code></li>
 <li><code>projpca.R</code></li>
 <li><code>qc2_imchip.sh</code></li>
 </ul>
@@ -109,7 +110,7 @@ img {
 <ol style="list-style-type: decimal">
 <li><strong>check_export.sh</strong> – this script checks the integrity of the genome studio export. It is called like so:</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/check_export.sh <span class="ot">$DATAFILE</span> <span class="ot">$tracking</span> <span class="st">&quot;Top Alleles&quot;</span></code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/check_export.sh <span class="ot">${DATAFILE}</span> <span class="ot">${tracking}</span> <span class="st">&quot;Top Alleles&quot;</span></code></pre>
 <p>where <code>${DATAFILE}</code> is the path to the raw export in the cphgcore, <code>${tracking}</code> is the path to the sample tracking sheet, and “Top Alleles” refers to the suffix of the columns from the export which will be used to create the plink files.</p>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>makedata.sh</strong> – this script produces a non-phenotyped raw plink file from the genome studio export. It is called like so:</li>
@@ -124,16 +125,16 @@ img {
 
 <span class="kw">plink</span> --update-ids duplicate_update.txt --bfile <span class="ot">${plink_nopheno}</span> --out <span class="ot">${plink_nophenoB}</span> --make-bed --noweb  <span class="kw">&gt;&gt;</span> <span class="ot">${logfile}</span></code></pre>
 <ol start="4" style="list-style-type: decimal">
-<li>Now the phenotype information must be added. There is a small hitch about how it is done, because later scripts will expect the existence of certain files that can be easily produced by using the <strong>pheno_inc.sh</strong> cript. This script will only add STATUS and SEX information to the plink file which it is given (make sure the column names are recognizable in the phenotype file.) The “covariable count” is a number indicating how many columns will be of interest for coloring graphs later (Cohort is the first one, and is standard; the next is Race. The title is hardcoded into the script, but can be easily changed to match the title of the column in the phenotype table.)</li>
+<li>Now the phenotype information must be added. There is a small hitch about how it is done, because later scripts will expect the existence of certain files that can be easily produced by using the <strong>pheno_inc.sh</strong> script. This script will only add STATUS and SEX information to the plink file which it is given (make sure the column names are recognizable in the phenotype file.) The “covariable count” is a number indicating how many columns will be of interest for coloring graphs later (Cohort is the first one, and is standard; the next is Race. The titles are hardcoded into the script, but can be easily changed to match the title of the columns in the phenotype table.)</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/pheno_inc.sh <span class="ot">${phenofile}</span> <span class="ot">${plink_nophenoB}</span> <span class="ot">${plink_nophenoC}</span> <span class="ot">${covariablecount}</span> T <span class="kw">&gt;&gt;</span> <span class="ot">${logfile}</span></code></pre>
-<p>where <code>${phenofile}</code> is the phenotype file (with “Sex” and “Status” and “SampleID” columns – n.b. both columns must containb numeric values, <code>${plink_nophenoB}</code> is the input PLINK file, <code>${plink_nophenoC}</code> is the name of the output PLINK file, <code>${covariablecount}</code> is the number of covariables in the file (recall that the list of titles is hardcoded, so if there is a covariable other than “Cohort”, the column title must be put into the list), and the “T” indicates that there is status information to be incorporated.</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/pheno_inc.sh <span class="ot">${phenofile}</span> <span class="ot">${plink_nophenoB}</span> <span class="ot">${plink_raw}</span> <span class="ot">${covariablecount}</span> T <span class="kw">&gt;&gt;</span> <span class="ot">${logfile}</span></code></pre>
+<p>where <code>${phenofile}</code> is the phenotype file (with “Sex” and “Status” and “SampleID” columns – n.b. both columns must contain numeric values, <code>${plink_nophenoB}</code> is the input PLINK file, <code>${plink_raw}</code> is the name of the output PLINK file, <code>${covariablecount}</code> is the number of covariables in the file (recall that the list of titles is hardcoded, so if there is a covariable other than “Cohort”, the column title must be put into the list), and the “T” indicates that there is status information to be incorporated.</p>
 <ol start="5" style="list-style-type: decimal">
-<li>There will also need to be a color file in the project folder. You can write one with this line:</li>
+<li>There will also need to be a color file in the project folder (which will contain the folders created by the scripts). You can write one with this line:</li>
 </ol>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">echo</span> <span class="st">&quot;red blue limegreen purple orange magenta purple4 deepskyblue peru yellow chartreuse4 steelblue lawngreen orangered4 gray orangered&quot;</span> <span class="kw">|</span> <span class="kw">sed</span> <span class="st">'s/ /\n/g'</span> <span class="kw">&gt;</span> colors.list</code></pre>
 <ol start="6" style="list-style-type: decimal">
-<li>Phenotype information that was not included through the <strong>pheno_inc.sh</strong> script can be added using PLINK.</li>
+<li>Phenotype information that was not included through the <strong>pheno_inc.sh</strong> script can be added using PLINK. See example scripts for more detail.</li>
 </ol>
 </div>
 <div id="qc" class="section level2">
@@ -145,24 +146,31 @@ img {
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/qc1.sh <span class="ot">${plink_raw}</span> <span class="ot">${nickname}</span> F <span class="kw">&gt;</span> <span class="ot">${logfile2}</span>
 <span class="kw">cp</span> <span class="ot">${plink_raw}</span>.covariable <span class="ot">${project_folder}</span>/QC1/<span class="ot">${nickname}</span>.cov
 <span class="kw">cp</span> covariables1.list <span class="ot">${project_folder}</span>/.</code></pre>
-<p>where <code>${nickname}</code> is a short alias that will be used to name the files, <code>${plink_raw}</code> is the raw plink file with phenotype information included.</p>
+<p>where <code>${nickname}</code> is a short alias that will be used to name the files, <code>${plink_raw}</code> is the raw PLINK file with all phenotype information included.</p>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>relatedness_qc.sh</strong> must be run in order to calculate relatedness between the samples.</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/relatedness_qc.sh <span class="ot">${nickname}</span> <span class="ot">${covariablevalue}</span> <span class="ot">${chip}</span> <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/relatedness_qc.sh <span class="ot">${nickname}</span> <span class="ot">${covariablevalue}</span> I <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
+<p>where <code>I</code> indicates that data was run on the Immunochip.</p>
 <ol start="4" style="list-style-type: decimal">
 <li><strong>qc_pdf.sh</strong> is run to illustrate the findings of <strong>qc1.sh</strong> and <strong>relatedness_qc.sh</strong>. Please note that any script that draws graphs will be calling R and an embedded R script. It is possible that your path to that script will be different from mine, so if the script fails, you should check that the path to the R script is correct. You can call <strong>qc_pdf.sh</strong></li>
 </ol>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/qc_pdf.sh <span class="ot">${overall_title}</span> <span class="ot">${nickname}</span> <span class="st">&quot;IMCHIP&quot;</span> <span class="ot">${covariablevalue}</span> <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
 <p>where <code>${overall_title}</code> is a title to be added to the graphs and <code>${covariablevalue}</code> refers to the number of the covariable to be graphed (according to the hard coded list in <strong>pheno_inc.sh</strong>. e.g. if you want to color by Cohort, the covariablevalue would be 1.)</p>
 <ol start="5" style="list-style-type: decimal">
-<li>structure.sh looks at population structure and draws graphs. Please see note regarding R scripts location in 4.</li>
+<li><strong>gender_basic.R</strong> is also included. It will draw a gender graph for whatever population it is given using KING –bySample output.</li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">R</span> CMD BATCH <span class="st">&quot;--args </span><span class="ot">${bySample}</span><span class="st">  </span><span class="ot">${nickname}</span><span class="st"> </span><span class="ot">${overall_title}</span><span class="st"> TRUE&quot;</span> <span class="ot">${imchipfolder}</span>/gender_basic.R
+<span class="kw">ps2pdf</span> <span class="ot">${nickname}</span>gender.ps <span class="ot">${nickname}</span>gender.pdf</code></pre>
+<p>where <code>${bySample}</code> is most likely *QC1/<span class="math">\({nickname}4bySample.txt*, `\)</span>{overall_title}<code>is the project name that should be included on the graph, and</code>TRUE<code>or</code>FALSE` indicates whether the boundary lines should be drawn.</p>
+<ol start="6" style="list-style-type: decimal">
+<li><strong>structure.sh</strong> looks at population structure and draws graphs. Please see note regarding R scripts location in #4.</li>
 </ol>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/structure.sh <span class="ot">${nickname}</span> <span class="ot">${overall_title}</span> <span class="ot">${chip}</span> <span class="ot">${covariablevalue}</span> <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
-<ol start="6" style="list-style-type: decimal">
+<ol start="7" style="list-style-type: decimal">
 <li><strong>qc2_imchip.sh</strong> produces a graph and a list of SNPs which are in Hardy-Weinberg Disequilibrium in the European population. This list will need to be added to the one produced by qc1.sh in order to produce a complete list of SNPs to be removed.</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${scripts}</span>/qc2_imchip.sh <span class="ot">${nickname}</span> <span class="ot">${overall_title}</span> <span class="ot">${chip}</span> <span class="ot">${covariablevalue}</span> <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash</span> <span class="ot">${imchipfolder}</span>/qc2_imchip.sh <span class="ot">${nickname}</span> <span class="ot">${overall_title}</span> <span class="ot">${chip}</span> <span class="ot">${covariablevalue}</span> <span class="kw">&gt;&gt;</span> <span class="ot">${logfile2}</span></code></pre>
 <p>This script will write a list of SNPs to be removed because of Hardy-Weinberg Disequilibrium to a file in the QC2_HWE folder: <em>QC2_HWE/hweSNP.txt</em>. It will need to be appended to the original list of SNPs to be removed from <strong>qc1.sh</strong>.</p>
 <pre class="sourceCode bash"><code class="sourceCode bash">
 <span class="kw">cat</span> QC1/snptoberemoved.txt <span class="kw">&gt;</span> release_snptoberemoved.txt
@@ -172,7 +180,7 @@ img {
 
 <span class="co">## Now include HWD snps</span>
 <span class="kw">awk</span> <span class="st">'{print $1, &quot;HWDinEUR&quot;}'</span> QC2_HWE/hweSNP.txt <span class="kw">&gt;&gt;</span> release_snptoberemoved.txt</code></pre>
-<ol start="7" style="list-style-type: decimal">
+<ol start="8" style="list-style-type: decimal">
 <li>If the SNP map needs to be updated to hg19, the included imchip_mapupdate.txt file can be used to update the SNPs. This file was derived using the steps in the <code>/h2/t74/cphdesk/share/cphg_OnengutLab/Jessica/Farwell/SNP_Map</code> folder.</li>
 </ol>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">plink</span> --noweb --bfile <span class="ot">${plinkraw}</span> --update-map <span class="ot">${imchipfolder}</span>/imchip_mapupdate.txt --make-bed --out <span class="ot">${nickname}</span>_release</code></pre>

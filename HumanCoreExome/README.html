@@ -237,9 +237,10 @@ img {
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> tempdata
 <span class="kw">bash</span> <span class="ot">${hcefolder}</span>/per_cohort.sh <span class="ot">${chipversion}</span> </code></pre>
 <p>where <code>${chipversion}</code> is in this format: “12-1.0”,“12-1.1”, etc.</p>
-<ol start="3" style="list-style-type: decimal">
-<li><strong>release_zip.sh</strong> – this script takes the QC_Final folders produced during <strong>per_cohort.sh</strong>, zips them up with a list of passwords.</li>
-</ol>
+</div>
+<div id="release" class="section level2">
+<h2>Release</h2>
+<p><strong>release_zip.sh</strong> – this script takes the QC_Final folders produced during <strong>per_cohort.sh</strong>, zips them up with a list of passwords.</p>
 <pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">cd</span> tempdata
 <span class="kw">bash</span> <span class="ot">${hcefolder}</span>/release_zip.sh <span class="ot">${freezenum}</span> </code></pre>
 <p>where <code>${freezenum}</code> refers to which dataFreeze the cohort is from in order to put it in the correct release folder.</p>

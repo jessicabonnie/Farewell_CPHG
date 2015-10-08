@@ -3,8 +3,9 @@ title: "README"
 author: "Jessica Bonnie"
 date: "10/06/2015"
 output:
+  pdf_document: default
   html_document:
-    highlight: pygments
+    highlight: tango
 ---
 
 
@@ -96,9 +97,9 @@ cp covariables1.list ${project_folder}/.
 
 2. **relatedness_qc.sh** must be run in order to calculate relatedness between the samples.
 ```{r, engine = 'bash', eval = FALSE}
-bash ${imchipfolder}/relatedness_qc.sh ${nickname} ${covariablevalue} ${chip} >> ${logfile2}
+bash ${imchipfolder}/relatedness_qc.sh ${nickname} ${covariablevalue} I >> ${logfile2}
 ```
-
+ where `I` indicates that data was run on the Immunochip.
 
 4. **qc_pdf.sh** is run to illustrate the findings of **qc1.sh** and **relatedness_qc.sh**. Please note that any script that draws graphs will be calling R and an embedded R script. It is possible that your path to that script will be different from mine, so if the script fails, you should check that the path to the R script is correct. You can call **qc_pdf.sh**
 
@@ -108,14 +109,22 @@ bash ${imchipfolder}/qc_pdf.sh ${overall_title} ${nickname} "IMCHIP" ${covariabl
 ```
   where  `${overall_title}` is a title to be added to the graphs and `${covariablevalue}` refers to the number of the covariable to be graphed (according to the hard coded list in **pheno_inc.sh**. e.g. if you want to color by Cohort, the covariablevalue would be 1.)
 
-5. **structure.sh** looks at population structure and draws graphs. Please see note regarding R scripts location in #4.
+5. **gender_basic.R** is also included. It will draw a gender graph for whatever population it is given using KING --bySample output.
+
+```{r, engine = 'bash', eval = FALSE}
+R CMD BATCH "--args ${bySample}  ${nickname} ${overall_title} TRUE" ${imchipfolder}/gender_basic.R
+ps2pdf ${nickname}gender.ps ${nickname}gender.pdf
+```
+ where `${bySample}` is most likely *QC1/${nickname}4bySample.txt*, `${overall_title}` is the project name that should be included on the graph, and `TRUE` or `FALSE` indicates whether the boundary lines should be drawn.
+
+6. **structure.sh** looks at population structure and draws graphs. Please see note regarding R scripts location in #4.
 
 ```{r, engine = 'bash', eval = FALSE}
 bash ${imchipfolder}/structure.sh ${nickname} ${overall_title} ${chip} ${covariablevalue} >> ${logfile2}
 
 ```
 
-6. **qc2_imchip.sh** produces a graph and a list of SNPs which are in Hardy-Weinberg Disequilibrium in the European population. This list will need to be added to the one produced by qc1.sh in order to produce a complete list of SNPs to be removed.
+7. **qc2_imchip.sh** produces a graph and a list of SNPs which are in Hardy-Weinberg Disequilibrium in the European population. This list will need to be added to the one produced by qc1.sh in order to produce a complete list of SNPs to be removed.
 
 ```{r, engine = 'bash', eval = FALSE}
 bash ${imchipfolder}/qc2_imchip.sh ${nickname} ${overall_title} ${chip} ${covariablevalue} >> ${logfile2}
@@ -133,7 +142,7 @@ sed -i 's/Monomorphic2/Monomorphic/g' release_snptoberemoved.txt
 awk '{print $1, "HWDinEUR"}' QC2_HWE/hweSNP.txt >> release_snptoberemoved.txt
 ```
 
-7. If the SNP map needs to be updated to hg19, the included imchip_mapupdate.txt file can be used to update the SNPs. This file was derived using the steps in the `/h2/t74/cphdesk/share/cphg_OnengutLab/Jessica/Farwell/SNP_Map` folder.
+8. If the SNP map needs to be updated to hg19, the included imchip_mapupdate.txt file can be used to update the SNPs. This file was derived using the steps in the `/h2/t74/cphdesk/share/cphg_OnengutLab/Jessica/Farwell/SNP_Map` folder.
 
 ```{r, engine = 'bash', eval = FALSE}
 plink --noweb --bfile ${plinkraw} --update-map ${imchipfolder}/imchip_mapupdate.txt --make-bed --out ${nickname}_release

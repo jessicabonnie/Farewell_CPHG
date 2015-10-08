@@ -3,9 +3,9 @@ title: "README"
 author: "Jessica Bonnie"
 date: "10/06/2015"
 output:
-  pdf_document: default
   html_document:
     highlight: tango
+  pdf_document: default
 ---
 # HumanCoreExome
 
@@ -214,7 +214,9 @@ bash ${hcefolder}/per_cohort.sh ${chipversion}
 ```
   where `${chipversion}` is in this format: "12-1.0","12-1.1", etc.
 
-3. **release_zip.sh** -- this script takes the QC_Final folders produced during **per_cohort.sh**, zips them up with a list of passwords.
+## Release
+
+**release_zip.sh** -- this script takes the QC_Final folders produced during **per_cohort.sh**, zips them up with a list of passwords.
 
 ```{r, engine = 'bash', eval = FALSE}
 cd tempdata
