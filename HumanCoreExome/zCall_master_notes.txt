@@ -1,0 +1,84 @@
+
+zCall is used to call only "rare" SNPs, thus, the "zCalled" plink file produced at the end of this script contains the data from another plink file, a raw plink file used during initial QC, which was created from from a full data export from Genome Studio in "Top Allele" format. This un-zCalled raw plink file, which is passed to the script, fills in the genotype information for all but the rare (MAF < 1%) SNPs with call rates of greater than 99%. The rare SNPs with MAF < 99% and call rate > 99% are recalled by zCall.
+
+Here are the calls, it is recommended that you run this script while in a tempdata directory:
+bash zCall_master.sh 
+	This will produce the "zcallreport_QCed.txt" and the "BETAS.txt" that are needed as arguments to zCallibrationLoop.sh
+
+bash zCalibrationLoop.sh zcallreport_QCed.txt BETAS.txt 
+
+
+I. Prepare data for zCall and Select "Rare" SNPs (zCall_master.sh)
+
+	Step 1. QC Raw Report for Feeding Into Zcall
+		A. Take out known bad samples  -- samplestoberemoved provided after Initial QC
+		B. Apply Subject Callrate Filter (%98)
+		C. Compare Number of Subjects, Before and After
+		D. Zip Up intermediate QC report
+	
+	
+	Step 2. Calculate Mean & Standard Deviations for each Homozygote Cluster (NOTE: zCall has built in MAF and Call Rate filters)
+
+
+	Step 3. Create Rare SNP Lists using un-zCalled raw plink files from "Top Allele" format data export (those used by Wei-Min in Initial QC)
+
+		A. Calculate Minor Allele Frequency and SNP missingness -- removing samplestoberemoved provided after Initial QC
+		B. Create List of Rare (MAF>1%) SNPs with Callrates of 99% or Greater
+
+	Step 4. Create Allele and Flipping Update Files from Manifest
+		A. Identify correct manifest files based on chip version
+		B. Create File to Update Illumina Alleles (A/B) to ATCG
+		C. Create Master File to from which to select TOP Illumina Allele Updates Later
+	
+	
+	Step 5. EXCLUDE RARE SNPs (MAF < 1% & Call Rate > 99%) from un-zCalled Raw PLINK Files -- "raw_excluderare99"
+
+	Step 6. Create Update Files from Raw PLINK File
+		A. updatesex.txt
+		B. updatefamily.txt
+		C. updateparents.txt
+		D. updatestatus.txt
+
+		
+II. zCall all SNPs with zCall's Built-In Thresholds (zCall_master.sh cont.)
+	
+	Step 1. Recalculate BETAs using ../MEAN.SD file
+	
+	Step 2. Recalculate Thresholds
+	
+	Step 3. Recall all NoCalls using these Thresholds
+	
+	Step 4. Convert File to PLINK Bim/Bed Format -- Keeping only RARE SNPs
+
+	Step 5. Update Phenotype Info
+		A. updatesex.txt
+		B. updatefamily.txt
+		C. updateparents.txt
+		D. updatestatus.txt
+
+	Step 6. Update Alleles (A/B to ACTG)
+
+	Step 7. Flip Certain Rare SNPs to return to TOP ALLELE format
+		
+		A. Run frequency test on zCalled data -- RARE SNPs only.
+		B. Check A2 Values of Rare SNPs Match between un-zCalled and zCalled frequency files
+		C. Flip ONLY those Rare SNPS whose A2 values DO NOT MATCH value in un-zCalled TOP ALLELE Frequency File
+	
+	Step 8. Merge zCalled Rare SNPs with Subset of unZCalled raw (from which rare SNPs have been EXCLUDED) 
+	
+	Step 8. Run Threshold and Calibration Checking Loop
+	
+III. Run Threshold and Calibration Checking (zCallibrationLoop.sh)
+
+	Step 1. Calibrate Z Values between 3 and 15
+	
+	Step 2. Calculate the accuracy of Z values
+	
+
+
+
+
+
+
+
+
