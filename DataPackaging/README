@@ -1,0 +1,9 @@
+DataPackaging is the script used to select and then package image data files for a given sample tracking sheet. It is only up-to-date through Exome Chip version 12v1.1. In order to see the options, use the -h command. As in: `bash data_packaging.sh -h`.
+
+
+An example call to data_packaging.sh:
+
+bash ~/h4t1/programs/data_packaging.sh -t <path to sample sheet> -C <chip nickname in title, e.g HCE> -s <studynames for title; e.g. SwedenItalyPoitiersSteno> -b <path to output folder> -d <packing date; e.g.20140217> -m /h3/t5/cphgcore/JDRF_DN_Project/B-EGT-BPM_Core_Exome_Files/HumanCoreExome-12v1-0_B.bpm -c /h3/t5/cphgcore/JDRF_DN_Project/B-EGT-BPM_Core_Exome_Files/HumanCoreExome-12v1-0_B.egt
+
+
+
